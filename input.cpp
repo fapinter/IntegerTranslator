@@ -3,8 +3,8 @@
 #include <cmath>
 #include <unordered_map>
 
-int to_decimal(int type_input, std::string &input){
-    int output;
+int to_decimal(const int type_input,const  std::string &input){
+    int output = -1;
     int temp_decimal = 0;
     int curr_index = 0;
     //Needed because of the Alfanumeric nature of Hexadecimal
@@ -15,14 +15,13 @@ int to_decimal(int type_input, std::string &input){
         {'C', 12 },{'D', 13 },{'E', 14 },{'F', 15 }
     };
 
-    switch(type_input){
-
-        case (1): //Decimal
+    switch(type_input) {
+        case 1: { //Decimal
             std::cout << "Input already in decimal";
             output = stoi(input);
             break;
-
-        case (2): //Hexadecimal
+        }
+        case 2: { //Hexadecimal
 
             for (int power = input.length()-1; power >= 0; --power) {
                 temp_decimal += map_Hexa[input.at(curr_index)] * pow(16, power);
@@ -30,16 +29,16 @@ int to_decimal(int type_input, std::string &input){
             }
             output = temp_decimal;
             break;
-
-        case (3): //Octadecimal
+        }
+        case 3: { //Octadecimal
             for (int power = input.length()-1; power >= 0; --power) {
                 temp_decimal += map_Hexa[input.at(curr_index)] * pow(8, power);
                 ++curr_index;
             }
             output = temp_decimal;
             break;
-
-        case (4): //Binary
+        }
+        case 4: { //Binary
             for(int power = input.length() -1; power >= 0; --power){
                 // - '0' added for char -> int conversion
                 temp_decimal += (input.at(curr_index) - '0') * pow(2, power);
@@ -47,31 +46,32 @@ int to_decimal(int type_input, std::string &input){
             }
             output = temp_decimal;
             break;
+        }
 
-        default:
+        default: {
             std::cout << "Invalid input";
             break;
+        }
     }
     return output;
 }
 
-std::string to_binary(int &type_input, std::string &input){
-    std::string output;
+std::string to_binary(const int type_input, const std::string &input){
+    std::string output = "error";
 
-    std::unordered_map<char, std::string> map_Bin = {
+    std::unordered_map<char, std::string> map_bin = {
         {'0' , "0000"},{'1' , "0001"},{'2' , "0010"},{'3' , "0011"},
         {'4' , "0100"},{'5' , "0101"},{'6' , "0110"},{'7' , "0111"},
         {'8' , "1000"},{'9' , "1001"},{'A' , "1010"},{'B' , "1011"},
-        {'C' , "1100"},{'D' , "1101"},{'E' , "1110"},{'F' , "1111"},
+        {'C' , "1100"},{'D' , "1101"},{'E' , "1110"},{'F' , "1111"}
     };
-
+    int power = 0;
 
     switch(type_input){
 
-        case (1): //Decimal
+        case 1: { //Decimal
             int temp_decimal = stoi(input);
-            int power = 0;
-            
+
             bool highest_power = false;
             while (!highest_power){
                 if(pow(2, power) <= temp_decimal && pow(2, power+1) > temp_decimal){
@@ -81,44 +81,55 @@ std::string to_binary(int &type_input, std::string &input){
                     ++power;
                 }
             }
-            std::cout << power << '\n';
 
-            char binary_string[power+1];
-            binary_string[0] = '1';
+            std::string binary_string = "1";
             temp_decimal -= pow(2,power);
 
             for(int i = 1; i < power+1; ++i){
                 if(pow(2,power-i) <= temp_decimal){
-                    binary_string[i] = '1';
+                    binary_string.append("1");
                     temp_decimal -= pow(2,power-i);
                 }
                 else{
-                    binary_string[i] = '0';
+                    binary_string.append("0");
                 }
             }
+            output = binary_string;
+            break;
+        }
 
 
-            std::string temp_string;
-            for(int i = 0; i < power+1; ++i){
-                temp_string = temp_string + binary_string[i];
+        case 2: { //Hexadecimal
+            //Remove all 0s before the first 1
+            std::string temp_binary = map_bin[input.at(0)];
+            size_t it = temp_binary.find('1');
+            std::string binary;
+            if (it != std::string::npos) {
+                binary = temp_binary.substr(it);
             }
-            output = temp_string;
+            //Iterate through the input
+            for (auto it = input.begin()+1; it != input.end(); ++it) {
+                binary.append(map_bin[*it]);
+            }
+            output = binary;
             break;
+        }
 
-        case (2): //Hexadecimal
+        case 3: { //Octadecimal
+            break;
+        }
 
-            break;
-        case (3): //Octadecimal
-            break;
-        case (4): //Binary
+        case 4: {
+            //Binary
             std::cout << "Input already in decimal";
             output = input;
             break;
-
-        default:
+        }
+        default: {
             std::cout << "Invalid input";
             output = "-1";
             break;
+        }
 
     }
 
@@ -147,8 +158,8 @@ int main(){
 
     std::cin >> type_output;
 
-    int decimal = to_decimal(type_input, input);
-    std::cout << decimal << "\n";
+    const std::string binary = to_binary(type_input, input);
+    std::cout << binary << "\n";
 
     return 0;
 }
