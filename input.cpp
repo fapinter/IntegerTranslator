@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -38,22 +39,12 @@ std::string to_binary(const int &type_input, const std::string &input) {
 
         case 2: { //Decimal
             int temp_decimal = stoi(input);
-
-            while (pow(2, power+1) <= temp_decimal) {
-                ++power;
+            std::string binary_string;
+            while ( temp_decimal > 0 ) {
+                binary_string = (temp_decimal % 2 == 0 ? "0" : "1") + binary_string;
+                temp_decimal = temp_decimal / 2;
             }
-            std::string binary_string = "1";
-            temp_decimal -= pow(2,power);
 
-            for(int i = 1; i < power+1; ++i){
-                if(pow(2,power-i) <= temp_decimal){
-                    binary_string.append("1");
-                    temp_decimal -= pow(2,power-i);
-                }
-                else{
-                    binary_string.append("0");
-                }
-            }
             output = binary_string;
             break;
         }
@@ -114,9 +105,26 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
             break;
         }
         case 2: { //Decimal
-            //Binary search for alphanumeric
-            std::string temp_string;
+            std::unordered_map<int, std::string> hex_map = {
+                {10, "A"}, {11, "B"}, {12, "C"},
+                {13, "D"}, {14, "E"}, {15, "F"}
+            };
 
+            //Binary search for alphanumeric
+            std::string hex_string;
+            int temp_decimal = stoi(input);
+            while ( temp_decimal > 0) {
+                int remainder = temp_decimal % 16;
+                if (remainder < 10) {
+                    hex_string = std::to_string(remainder) + hex_string;
+                }
+                else {
+                    hex_string = hex_map[remainder] + hex_string;
+                }
+                temp_decimal /= 16;
+            }
+            output = hex_string;
+            break;
         }
 
         case 3: { //Octadecimal
@@ -125,7 +133,7 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
             //4 digits binary representations
             while (binary.length() % 4 != 0) {
                 std::string temp = "0";
-                binary = temp.append(binary);
+                binary = temp + binary;
             }
             for (int i = -1; i < binary.length()-4; i += 4) {
                 temp_string.append(map_bin[binary.substr(i+1, 4)]);
@@ -139,6 +147,8 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
             break;
         }
     }
+
+    return output;
 }
 int main(){
     std::string input;
@@ -166,8 +176,8 @@ int main(){
         std::cout << "Output: " << input;
     }
     else {
-        const std::string binary = to_binary(type_input, input);
-        std::cout << binary << "\n";
+        const std::string binary = to_hexadecimal(type_input, input);
+        std::cout <<"Resposta: " << binary << "\n";
     }
     return 0;
 }
