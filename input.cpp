@@ -33,7 +33,6 @@ std::string to_binary(const int &type_input, const std::string &input) {
         {'8' , "1000"},{'9' , "1001"},{'A' , "1010"},{'B' , "1011"},
         {'C' , "1100"},{'D' , "1101"},{'E' , "1110"},{'F' , "1111"}
     };
-    int power = 0;
 
     switch (type_input){
 
@@ -98,8 +97,8 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
     switch ( type_input ) {
         case 1: { //Binary
             std::string temp_string;
-            for (int i= -1; i < input.length()-4; i += 4) {
-                temp_string.append(map_bin[input.substr(i+1, 4)]);
+            for (size_t i = 0; i < input.length(); i += 4) {
+                temp_string.append(map_bin[input.substr(i, 4)]);
             }
             output = temp_string;
             break;
@@ -135,8 +134,8 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
                 std::string temp = "0";
                 binary = temp + binary;
             }
-            for (int i = -1; i < binary.length()-4; i += 4) {
-                temp_string.append(map_bin[binary.substr(i+1, 4)]);
+            for (int i = 0; i < binary.length(); i += 4) {
+                temp_string.append(map_bin[binary.substr(i, 4)]);
             }
             output = temp_string;
             break;
@@ -149,6 +148,30 @@ std::string to_hexadecimal(const int &type_input, const std::string &input) {
     }
 
     return output;
+}
+
+std::string to_octadecimal(const int &type_input, const std::string &input){
+    std::string output;
+
+    switch( type_input ){
+        case 1:{ //Binary
+
+        }
+
+        case 2:{ //Decimal
+
+        }
+
+        case 3:{ //Hexadecimal
+
+            break;
+        }
+
+        default: {
+            std::cout << "Invalid input";
+            break;
+        }
+    }
 }
 int main(){
     std::string input;
