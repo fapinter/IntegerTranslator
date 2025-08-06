@@ -127,6 +127,7 @@ std::string to_octadecimal(const int &type_input, const std::string &input){
     return output;
 }
 int main(){
+
     std::string input;
     int type_input, type_output;
 
